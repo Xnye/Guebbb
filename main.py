@@ -1,9 +1,11 @@
 import random, os
 
+##### 设置区 #####
+
 # 是否启用已开字母大写
-enable_upper = False
+enable_upper = True
 # 是否显示答案
-display_answer = False
+display_answer = True
 
 while True:
     os.system("cls")
