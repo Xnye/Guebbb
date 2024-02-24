@@ -1,4 +1,4 @@
-import random, os
+import random, os, time
 
 ##### 设置区 #####
 
@@ -6,6 +6,12 @@ import random, os
 enable_upper = True
 # 是否显示答案
 display_answer = True
+# 错误提示持续时间 (秒)
+sleep_time = 0.5
+
+def prints(text, dur):
+    print(text)
+    time.sleep(dur)
 
 while True:
     os.system("cls")
@@ -16,7 +22,7 @@ while True:
         with open(f"{f}.txt", "r", encoding="utf-8") as f:
             song_list.extend(f.read().splitlines())
     except:
-        print("文件不存在或无法读取")
+        prints("文件不存在或无法读取", sleep_time)
         continue
 
     try:
@@ -25,7 +31,7 @@ while True:
         selected_songs = random.sample(song_list, song_count)
         break
     except:
-        print("输入应小于等于曲库曲目数量")
+        prints("输入应小于等于曲库曲目数量", sleep_time)
         continue
 
 masked_songs = ["".join("*" if c != " " else c for c in song) for song in selected_songs]
@@ -61,15 +67,15 @@ while True:
             try:
                 masked_songs.remove(masked_songs[int(user_input[1:]) - 1])
                 selected_songs.remove(selected_songs[int(user_input[1:]) - 1])
-            except IndexError: print("无效行号")
+            except IndexError: prints("无效行号", sleep_time)
             
         elif user_input.startswith("o") and user_input[1:].isdigit():
             # 输入o加数字揭晓对应行的曲名
             index = int(user_input[1:]) - 1
             if 0 <= index < song_count:
                 masked_songs[index] = selected_songs[index]
-            else: print("无效行号")
-        else: print("无效输入")
+            else: prints("无效行号", sleep_time)
+        else: prints("无效输入", sleep_time)
     except:
-        print("检查你的输入")
+        prints("检查你的输入", sleep_time)
         continue
