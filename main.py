@@ -15,7 +15,7 @@ def prints(text, dur):
 
 while True:
     os.system("cls")
-    print("Guebbb | v1.1")
+    print("Guebbb | v1.2")
     f = input("载入文件: ")
     song_list = []
     try:
@@ -41,14 +41,14 @@ while True:
     
     # 显示答案
     if display_answer:
-        for idx, song in enumerate(selected_songs):
-            print(f"{idx + 1}= {song}")
+        for i, song in enumerate(selected_songs):
+            print(f"{i + 1}= {song}")
         print("-----------")
         
     # 主要页面
     print(f"Guessed: {''.join(opened_letters)}")
-    for idx, masked_song in enumerate(masked_songs):
-        print(f"{idx + 1}. {masked_song}")
+    for i, masked_song in enumerate(masked_songs):
+        print(f"{i + 1}. {masked_song}")
     
     # 处理输入
     try:
@@ -56,13 +56,13 @@ while True:
 
         if len(user_input) == 1:
             # 输入单个字母，解锁该字母
-            for idx, song in enumerate(selected_songs):
-                masked_songs[idx] = "".join(c if c.lower() == user_input.lower() else m for c, m in zip(song, masked_songs[idx]))
+            for i, song in enumerate(selected_songs):
+                masked_songs[i] = "".join(c if c.lower() == user_input.lower() else m for (c, m) in zip(song, masked_songs[i]))
             user_input_case = user_input.upper() if enable_upper else user_input.lower()
             if user_input_case not in opened_letters:
                 opened_letters.append(user_input_case)
             
-        elif user_input.startswith("d"):
+        elif user_input.startswith("d") and user_input[1:].isdigit():
             ## 输入d加数字删曲
             try:
                 masked_songs.remove(masked_songs[int(user_input[1:]) - 1])
@@ -75,6 +75,13 @@ while True:
             if 0 <= index < song_count:
                 masked_songs[index] = selected_songs[index]
             else: prints("无效行号", sleep_time)
+        
+        elif user_input.startswith("^") and user_input[1:] != None:
+            # 输入^加曲名新增曲目 支持多个曲目用^分隔
+            new_songs = user_input[1:].split("^")
+            selected_songs.extend(new_songs)
+            masked_songs.extend(["".join(c if (c.upper() if enable_upper else c.lower()) in opened_letters else "*" for c in song) for song in new_songs])
+        
         else: prints("无效输入", sleep_time)
     except:
         prints("检查你的输入", sleep_time)
