@@ -2,12 +2,14 @@ import random, os, time
 
 ##### 设置区 #####
 
-# 是否启用已开字母大写
+# 是否启用已开字母大写 (True/False)
 enable_upper = True
-# 是否显示答案
+# 是否显示答案 (True/False)
 display_answer = True
 # 错误提示持续时间 (秒)
 sleep_time = 0.5
+# 屏蔽符号 (字符)
+star_char = "*"
 
 def prints(text, dur):
     print(text)
@@ -15,7 +17,7 @@ def prints(text, dur):
 
 while True:
     os.system("cls")
-    print("Guebbb | v1.2")
+    print("Guebbb | v1.3")
     f = input("载入文件: ")
     song_list = []
     try:
@@ -28,27 +30,35 @@ while True:
     try:
         song_count = int(input("曲目数量: "))
         opened_letters = []
-        selected_songs = random.sample(song_list, song_count)
+        songname_list = random.sample(song_list, song_count)
+        songstatus_list = [0 for _ in songname_list]
         break
     except:
         prints("输入应小于等于曲库曲目数量", sleep_time)
         continue
-
-masked_songs = ["".join("*" if c != " " else c for c in song) for song in selected_songs]
 
 while True:
     os.system("cls")
     
     # 显示答案
     if display_answer:
-        for i, song in enumerate(selected_songs):
+        for i, song in enumerate(songname_list):
             print(f"{i + 1}= {song}")
         print("-----------")
         
     # 主要页面
-    print(f"Guessed: {''.join(opened_letters)}")
-    for i, masked_song in enumerate(masked_songs):
-        print(f"{i + 1}. {masked_song}")
+    print(f"Guessed: {"".join(opened_letters)}")
+    maskedsong_list = ["".join(char if (char == " " or (char.upper() if enable_upper else char.lower()) in opened_letters) else star_char for char in song) for song in songname_list]
+    for i, masked_song in enumerate(maskedsong_list):
+        # 如果字母已经全开则判断为揭晓状态
+        if songname_list[i] == masked_song:
+            songstatus_list[i] = 1
+            
+        # 如果曲目已揭晓显示曲名，否则显示掩码
+        if songstatus_list[i] == 1:
+            print(f"{i + 1}= {songname_list[i]}")
+        else:
+            print(f"{i + 1}. {masked_song}")
     
     # 处理输入
     try:
@@ -56,31 +66,24 @@ while True:
 
         if len(user_input) == 1:
             # 输入单个字母，解锁该字母
-            for i, song in enumerate(selected_songs):
-                masked_songs[i] = "".join(c if c.lower() == user_input.lower() else m for (c, m) in zip(song, masked_songs[i]))
             user_input_case = user_input.upper() if enable_upper else user_input.lower()
             if user_input_case not in opened_letters:
                 opened_letters.append(user_input_case)
             
         elif user_input.startswith("d") and user_input[1:].isdigit():
             ## 输入d加数字删曲
-            try:
-                masked_songs.remove(masked_songs[int(user_input[1:]) - 1])
-                selected_songs.remove(selected_songs[int(user_input[1:]) - 1])
-            except IndexError: prints("无效行号", sleep_time)
+            songname_list.pop(int(user_input[1:]) - 1)
+            songstatus_list.pop(int(user_input[1:]) - 1)
             
         elif user_input.startswith("o") and user_input[1:].isdigit():
             # 输入o加数字揭晓对应行的曲名
-            index = int(user_input[1:]) - 1
-            if 0 <= index < song_count:
-                masked_songs[index] = selected_songs[index]
-            else: prints("无效行号", sleep_time)
+            songstatus_list[int(user_input[1:]) - 1] = 1
         
         elif user_input.startswith("^") and user_input[1:] != None:
             # 输入^加曲名新增曲目 支持多个曲目用^分隔
             new_songs = user_input[1:].split("^")
-            selected_songs.extend(new_songs)
-            masked_songs.extend(["".join(c if (c.upper() if enable_upper else c.lower()) in opened_letters else "*" for c in song) for song in new_songs])
+            songname_list.extend(new_songs)
+            songstatus_list.extend([0 for _ in new_songs])
         
         else: prints("无效输入", sleep_time)
     except:

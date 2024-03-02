@@ -18,7 +18,7 @@
 
 「文件说明」
 
-① **main.py** = 主程序 ② **a.txt** = Arcaea测试曲库 ③ **p.txt** = Phigros测试曲库
+① **main.py** = 主程序 ② **ab.txt** = Arcaea 5.2 仅Beyond曲 ③ **af.txt** = Arcaea 5.2 全曲 ④ **p.txt** = Phigros 3.5 全曲
 
 「特色」
 
@@ -29,25 +29,25 @@
 初始化页面
 
 ``` 
-Guebbb | v1.2
-载入文件: p
+Guebbb | v1.3
+载入文件: ab 
 曲目数量: 5
 ``` 
 
 猜曲页面
 ``` 
-1= Infinite Strife,
-2= world.execute(me);
-3= Ether Strike
-4= PUPA
-5= Arcahv
+1= Singularity
+2= Red and Blue
+3= Last | Eternity
+4= Quon
+5= Ignotus
 -----------
-Guessed: GCJWAXIの.S
-1. I**i*i** S**i***
-2. world.execute(me);
-3. ***** S**i**
-4. ***A
-5. A*ca**
+Guessed: QOIAのS
+1. Si****a*i**
+2. *** a** ****
+3. *as* * *****i**
+4= Quon
+5. I**o**s
 >
 ```
 
