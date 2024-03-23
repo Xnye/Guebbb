@@ -3,7 +3,7 @@ import random, os, time
 ##### 设置区 #####
 
 # ★ 是否自动复制 (True/False)
-enable_copy = True
+enable_copy = False
 # 是否启用已开字母大写 (True/False)
 enable_upper = True
 # 是否显示答案 (True/False)
